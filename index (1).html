@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP Associates — Custom Apparel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0a0a0a; --cream: #f5f0e8; --rust: #c4532a;
+    --warm: #e8dcc8; --mid: #2a2a2a; --accent: #d4a843;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--cream); font-family: 'DM Sans', sans-serif; overflow-x: hidden; cursor: none; }
+
+  .cursor { width: 12px; height: 12px; background: var(--rust); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+  .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--cream); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 24px 60px; background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent); }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: var(--cream); text-decoration: none; }
+  .logo span { color: var(--rust); }
+  nav ul { display: flex; gap: 40px; list-style: none; }
+  nav ul a { color: var(--cream); text-decoration: none; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; position: relative; opacity: 0.8; transition: opacity 0.2s; }
+  nav ul a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--rust); transition: width 0.3s ease; }
+  nav ul a:hover::after { width: 100%; }
+  nav ul a:hover { opacity: 1; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 120px 60px 80px; position: relative; overflow: hidden; }
+  .hero::before { content: 'APPAREL'; position: absolute; right: -60px; top: 50%; transform: translateY(-50%) rotate(90deg); font-family: 'Bebas Neue', sans-serif; font-size: 180px; color: rgba(255,255,255,0.03); letter-spacing: 20px; white-space: nowrap; pointer-events: none; }
+  .hero-text { position: relative; z-index: 2; }
+  .hero-tag { display: inline-block; border: 1px solid var(--rust); color: var(--rust); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; padding: 6px 16px; margin-bottom: 32px; animation: fadeUp 0.8s ease 0.2s both; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(72px, 8vw, 120px); line-height: 0.95; letter-spacing: 2px; margin-bottom: 24px; animation: fadeUp 0.8s ease 0.4s both; }
+  .hero h1 em { font-style: italic; font-family: 'Playfair Display', serif; color: var(--rust); }
+  .price-badge { display: inline-block; background: var(--accent); color: var(--black); font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; padding: 8px 20px; margin-bottom: 28px; animation: fadeUp 0.8s ease 0.55s both; }
+  .hero-sub { font-size: 16px; line-height: 1.7; opacity: 0.6; max-width: 400px; margin-bottom: 44px; animation: fadeUp 0.8s ease 0.65s both; }
+  .hero-cta { display: flex; gap: 20px; animation: fadeUp 0.8s ease 0.8s both; }
+  .btn-primary { background: var(--rust); color: var(--cream); padding: 16px 36px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border: none; cursor: none; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+  .btn-primary:hover { background: var(--cream); color: var(--black); }
+  .btn-outline { background: transparent; color: var(--cream); padding: 16px 36px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.3); cursor: none; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+  .btn-outline:hover { border-color: var(--cream); }
+
+  .hero-visual { position: relative; display: flex; justify-content: center; align-items: center; height: 600px; animation: fadeUp 1s ease 0.5s both; }
+  .hero-card { width: 320px; height: 420px; background: var(--mid); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; transform: rotate(-3deg); transition: transform 0.4s ease; }
+  .hero-card:hover { transform: rotate(0deg) scale(1.02); }
+  .hero-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--rust) 0%, var(--accent) 100%); opacity: 0.15; }
+  .tshirt-svg { width: 200px; height: auto; opacity: 0.9; }
+  .hero-card-2 { width: 220px; height: 280px; background: var(--rust); position: absolute; bottom: 40px; right: 20px; display: flex; align-items: center; justify-content: center; transform: rotate(5deg); transition: transform 0.4s ease; }
+  .hero-card-2:hover { transform: rotate(2deg); }
+  .hero-card-2 .label { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--cream); letter-spacing: 4px; transform: rotate(-90deg); white-space: nowrap; }
+  .stat-row { position: absolute; bottom: 0; left: 0; display: flex; gap: 50px; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: var(--rust); line-height: 1; }
+  .stat-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 4px; }
+
+  /* MARQUEE */
+  .marquee-section { overflow: hidden; padding: 20px 0; background: var(--rust); }
+  .marquee-track { display: flex; gap: 60px; animation: marquee 22s linear infinite; white-space: nowrap; }
+  .marquee-item { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 4px; color: var(--cream); flex-shrink: 0; }
+  .marquee-dot { color: var(--accent); }
+
+  /* PRODUCTS */
+  .products { padding: 120px 60px; }
+  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 72px; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 5vw, 80px); line-height: 1; letter-spacing: 2px; }
+  .section-title em { font-style: italic; font-family: 'Playfair Display', serif; color: var(--rust); }
+  .section-sub { opacity: 0.5; font-size: 14px; max-width: 260px; text-align: right; line-height: 1.6; }
+  .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .product-card { background: var(--mid); aspect-ratio: 3/4; position: relative; overflow: hidden; cursor: none; }
+  .product-card:first-child { grid-row: span 2; aspect-ratio: auto; }
+  .product-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.5s ease; }
+  .product-card:hover .product-bg { transform: scale(1.05); }
+  .product-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.92) 0%, transparent 55%); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; }
+  .product-cat { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--rust); margin-bottom: 8px; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 8px; }
+  .product-desc { font-size: 13px; opacity: 0.6; line-height: 1.6; margin-bottom: 12px; }
+  .product-price { display: inline-block; background: var(--accent); color: var(--black); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; padding: 4px 14px; }
+  .bg-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+  .bg-2 { background: linear-gradient(135deg, #2d1b0e 0%, #4a2c16 100%); }
+  .bg-3 { background: linear-gradient(135deg, #0d2137 0%, #1a3a52 100%); }
+  .bg-4 { background: linear-gradient(135deg, #1a2d1a 0%, #2d4a2d 100%); }
+  .product-icon { width: 120px; opacity: 0.2; }
+  .product-icon-lg { width: 200px; }
+
+  /* FOUNDERS */
+  .founders { padding: 100px 60px; background: var(--cream); color: var(--black); }
+  .founders-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .founders-text .section-title { color: var(--black); }
+  .founders-intro { font-size: 16px; line-height: 1.8; opacity: 0.7; margin-top: 24px; }
+  .founders-cards { display: flex; gap: 24px; }
+  .founder-card { flex: 1; background: var(--black); padding: 40px 28px; color: var(--cream); position: relative; overflow: hidden; }
+  .founder-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rust); }
+  .founder-card:nth-child(2)::before { background: var(--accent); }
+  .founder-avatar { width: 64px; height: 64px; background: var(--mid); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--rust); letter-spacing: 1px; }
+  .founder-card:nth-child(2) .founder-avatar { color: var(--accent); }
+  .founder-name { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; margin-bottom: 8px; }
+  .founder-role { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--rust); margin-bottom: 16px; }
+  .founder-card:nth-child(2) .founder-role { color: var(--accent); }
+  .founder-bio { font-size: 13px; opacity: 0.5; line-height: 1.7; }
+
+  /* PROCESS */
+  .process { padding: 120px 60px; background: var(--warm); color: var(--black); }
+  .process .section-title { color: var(--black); }
+  .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 80px; }
+  .step { padding-top: 24px; border-top: 2px solid; }
+  .step:nth-child(1) { border-color: var(--rust); }
+  .step:nth-child(2) { border-color: var(--accent); }
+  .step:nth-child(3) { border-color: var(--black); }
+  .step:nth-child(4) { border-color: var(--rust); }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 72px; color: rgba(0,0,0,0.07); line-height: 1; margin-bottom: 16px; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 12px; }
+  .step-desc { font-size: 14px; opacity: 0.6; line-height: 1.7; }
+
+  /* ORDER */
+  .order-section { padding: 120px 60px; background: var(--black); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .order-intro { font-size: 16px; opacity: 0.6; line-height: 1.8; margin-top: 24px; }
+  .contact-info { margin-top: 48px; }
+  .contact-item { display: flex; gap: 16px; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .contact-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.4; min-width: 80px; padding-top: 2px; }
+  .contact-value { font-size: 15px; font-weight: 500; }
+
+  form { display: flex; flex-direction: column; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; font-weight: 500; }
+  input, select, textarea { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 18px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--cream); outline: none; transition: border-color 0.2s; cursor: none; }
+  input:focus, select:focus, textarea:focus { border-color: var(--rust); }
+  select option { background: var(--mid); color: var(--cream); }
+  textarea { height: 100px; resize: vertical; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* File upload */
+  .file-upload-area { border: 2px dashed rgba(255,255,255,0.15); padding: 36px; text-align: center; transition: border-color 0.3s, background 0.3s; cursor: none; position: relative; }
+  .file-upload-area:hover, .file-upload-area.dragover { border-color: var(--rust); background: rgba(196,83,42,0.06); }
+  .file-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: none; width: 100%; height: 100%; border: none; padding: 0; }
+  .upload-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .upload-text { font-size: 14px; opacity: 0.6; }
+  .upload-text strong { color: var(--rust); opacity: 1; font-weight: 600; }
+  .upload-hint { font-size: 11px; opacity: 0.35; margin-top: 8px; letter-spacing: 1px; }
+  .file-name-display { margin-top: 10px; font-size: 13px; color: var(--accent); font-weight: 500; display: none; }
+
+  .submit-btn { background: var(--rust); color: var(--cream); padding: 18px 40px; border: none; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: none; transition: all 0.3s; align-self: flex-start; }
+  .submit-btn:hover { background: var(--accent); color: var(--black); }
+
+  /* FOOTER */
+  footer { background: #050505; padding: 60px; border-top: 1px solid rgba(255,255,255,0.06); display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; }
+  .footer-brand .logo { display: block; margin-bottom: 16px; }
+  .footer-tagline { font-size: 13px; opacity: 0.4; line-height: 1.7; max-width: 240px; }
+  .footer-founders { font-size: 12px; opacity: 0.3; margin-top: 14px; letter-spacing: 1px; }
+  .footer-col h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; opacity: 0.4; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col ul li a { color: var(--cream); text-decoration: none; font-size: 14px; opacity: 0.55; transition: opacity 0.2s; }
+  .footer-col ul li a:hover { opacity: 1; }
+  .footer-bottom { background: #050505; padding: 24px 60px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 12px; opacity: 0.25; letter-spacing: 1px; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 30px; }
+    nav ul { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 120px 30px 60px; }
+    .hero-visual { display: none; }
+    .products, .founders, .process, .order-section { padding: 80px 30px; }
+    .product-grid { grid-template-columns: 1fr 1fr; }
+    .product-card:first-child { grid-row: auto; }
+    .process-steps, .founders-inner { grid-template-columns: 1fr; }
+    .founders-cards { flex-direction: column; }
+    .order-section { grid-template-columns: 1fr; gap: 40px; }
+    footer { grid-template-columns: 1fr 1fr; padding: 40px 30px; gap: 40px; }
+    .footer-bottom { padding: 20px 30px; flex-direction: column; gap: 8px; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .section-sub { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#" class="logo">TP <span>Associates</span></a>
+  <ul>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#founders">About Us</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#order">Order Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-tag">Custom Apparel Studio</div>
+    <h1>WEAR<br>YOUR <em>Style</em></h1>
+    <div class="price-badge">T-Shirts &amp; Shirts Starting at ₹700</div>
+    <p class="hero-sub">Premium custom t-shirts, hoodies &amp; shirts made for you. Upload your design — we handle the rest.</p>
+    <div class="hero-cta">
+      <a href="#order" class="btn-primary">Upload Your Design</a>
+      <a href="#products" class="btn-outline">View Products</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="product-bg bg-1"></div>
+      <svg class="tshirt-svg" viewBox="0 0 200 180" fill="none">
+        <path d="M75 20 C80 10 90 5 100 5 C110 5 120 10 125 20 L155 30 L170 70 L145 80 L145 165 L55 165 L55 80 L30 70 L45 30 Z" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
+        <path d="M75 20 C80 35 82 40 100 40 C118 40 120 35 125 20" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="hero-card-2"><span class="label">CUSTOM</span></div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">₹700</div><div class="stat-label">Starting Price</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Custom Made</div></div>
+      <div class="stat"><div class="stat-num">Fast</div><div class="stat-label">Delivery</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">T-SHIRTS</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">HOODIES</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">FORMAL SHIRTS</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">STARTING ₹700</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">UPLOAD YOUR DESIGN</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">BULK ORDERS</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">T-SHIRTS</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">HOODIES</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">FORMAL SHIRTS</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">STARTING ₹700</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">UPLOAD YOUR DESIGN</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">BULK ORDERS</span><span class="marquee-item marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="section-header reveal">
+    <div>
+      <div class="hero-tag" style="margin-bottom:16px">What We Make</div>
+      <div class="section-title">OUR <em>Collection</em></div>
+    </div>
+    <p class="section-sub">Every piece crafted with care. T-shirts &amp; shirts start at just ₹700.</p>
+  </div>
+  <div class="product-grid">
+    <div class="product-card reveal">
+      <div class="product-bg bg-1">
+        <svg class="product-icon product-icon-lg" viewBox="0 0 200 180" fill="none">
+          <path d="M75 20 C80 10 90 5 100 5 C110 5 120 10 125 20 L155 30 L170 70 L145 80 L145 165 L55 165 L55 80 L30 70 L45 30 Z" fill="none" stroke="white" stroke-width="2"/>
+          <path d="M75 20 C80 35 82 40 100 40 C118 40 120 35 125 20" fill="none" stroke="white" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="product-overlay">
+        <span class="product-cat">Most Popular</span>
+        <h3 class="product-name">Premium T-Shirts</h3>
+        <p class="product-desc">100% cotton, custom prints &amp; embroidery. All sizes available.</p>
+        <span class="product-price">Starting ₹700</span>
+      </div>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-bg bg-2">
+        <svg class="product-icon" viewBox="0 0 200 200" fill="none">
+          <path d="M60 50 L40 90 L70 100 L70 175 L130 175 L130 100 L160 90 L140 50 C130 55 120 60 100 60 C80 60 70 55 60 50Z" fill="none" stroke="white" stroke-width="2"/>
+          <path d="M60 50 C65 30 75 15 100 15 C125 15 135 30 140 50" fill="none" stroke="white" stroke-width="2"/>
+          <path d="M40 90 C30 88 25 85 20 80 L15 60 L60 50" fill="none" stroke="white" stroke-width="2"/>
+          <path d="M160 90 C170 88 175 85 180 80 L185 60 L140 50" fill="none" stroke="white" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="product-overlay">
+        <span class="product-cat">Streetwear</span>
+        <h3 class="product-name">Hoodies</h3>
+        <p class="product-desc">Fleece hoodies with custom graphics. Zip-up &amp; pullover styles.</p>
+        <span class="product-price">Get a Quote</span>
+      </div>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-bg bg-3">
+        <svg class="product-icon" viewBox="0 0 200 200" fill="none">
+          <path d="M70 20 L50 80 L75 90 L75 175 L125 175 L125 90 L150 80 L130 20 L110 30 L100 35 L90 30 Z" fill="none" stroke="white" stroke-width="2"/>
+          <line x1="85" y1="55" x2="115" y2="55" stroke="white" stroke-width="1.5"/>
+          <line x1="83" y1="68" x2="117" y2="68" stroke="white" stroke-width="1.5"/>
+          <line x1="81" y1="81" x2="119" y2="81" stroke="white" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="product-overlay">
+        <span class="product-cat">Corporate</span>
+        <h3 class="product-name">Formal Shirts</h3>
+        <p class="product-desc">Professional shirts with logo &amp; custom embroidery placement.</p>
+        <span class="product-price">Starting ₹700</span>
+      </div>
+    </div>
+    <div class="product-card reveal" style="grid-column:3">
+      <div class="product-bg bg-4">
+        <svg class="product-icon" viewBox="0 0 200 200" fill="none">
+          <rect x="60" y="40" width="80" height="130" rx="4" fill="none" stroke="white" stroke-width="2"/>
+          <path d="M60 70 L140 70" stroke="white" stroke-width="1.5"/>
+          <circle cx="100" cy="55" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+          <path d="M75 100 L125 100 M75 115 L125 115 M75 130 L110 130" stroke="white" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="product-overlay">
+        <span class="product-cat">Bulk Orders</span>
+        <h3 class="product-name">Team &amp; Events</h3>
+        <p class="product-desc">Uniforms, event tees &amp; bulk orders with special discounts.</p>
+        <span class="product-price">Bulk Discount</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS -->
+<section class="founders" id="founders">
+  <div class="founders-inner">
+    <div class="founders-text reveal">
+      <div class="hero-tag" style="background:var(--black);color:var(--cream);border-color:var(--black);display:inline-block;margin-bottom:16px;">The Team</div>
+      <div class="section-title">MEET THE <em>Founders</em></div>
+      <p class="founders-intro">TP Associates was built on a simple belief — great quality clothing should be accessible and affordable for everyone. We're a passionate team bringing your custom designs to life, one garment at a time.</p>
+    </div>
+    <div class="founders-cards reveal">
+      <div class="founder-card">
+        <div class="founder-avatar">DH</div>
+        <div class="founder-name">Dhaval</div>
+        <div class="founder-role">Co-Founder</div>
+        <p class="founder-bio">Passionate about quality fabrics and making sure every single order meets the highest standard before it reaches you.</p>
+      </div>
+      <div class="founder-card">
+        <div class="founder-avatar">GT</div>
+        <div class="founder-name">Gautam</div>
+        <div class="founder-role">Co-Founder</div>
+        <p class="founder-bio">Driven by creativity and customer satisfaction — Gautam ensures every design is executed exactly as you envision it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="reveal">
+    <div class="hero-tag" style="background:var(--black);color:var(--cream);border-color:var(--black);display:inline-block;margin-bottom:16px;">How It Works</div>
+    <div class="section-title">OUR <em>Process</em></div>
+  </div>
+  <div class="process-steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <h3 class="step-title">Choose Your Style</h3>
+      <p class="step-desc">Pick from t-shirts, hoodies, or shirts. Select fabric, color, and fit that suits your vision.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <h3 class="step-title">Upload Your Design</h3>
+      <p class="step-desc">Upload your artwork or logo using the order form. We review and confirm it for production.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <h3 class="step-title">We Craft It</h3>
+      <p class="step-desc">Our team uses premium printing &amp; embroidery techniques to create your perfect garment.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <h3 class="step-title">Fast Delivery</h3>
+      <p class="step-desc">Receive your custom apparel quickly. Bulk orders handled with care and priority.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER -->
+<section class="order-section" id="order">
+  <div>
+    <div class="hero-tag" style="margin-bottom:16px">Get Started</div>
+    <div class="section-title">PLACE YOUR <em>Order</em></div>
+    <p class="order-intro">Fill in your details and upload your design. We'll get back to you within 24 hours with a quote. T-shirts &amp; shirts start at just ₹700!</p>
+    <div class="contact-info">
+      <div class="contact-item">
+        <span class="contact-label">Email</span>
+        <span class="contact-value">tpassociates07@gmail.com</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Founders</span>
+        <span class="contact-value">Dhaval &amp; Gautam</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Pricing</span>
+        <span class="contact-value">T-Shirts &amp; Shirts from ₹700</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Response</span>
+        <span class="contact-value">Within 24 Hours</span>
+      </div>
+    </div>
+  </div>
+  <form onsubmit="handleSubmit(event)">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" placeholder="Full name" required>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="tel" placeholder="+91 XXXXX XXXXX">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="you@example.com" required>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Product Type</label>
+        <select>
+          <option>T-Shirt (from ₹700)</option>
+          <option>Hoodie</option>
+          <option>Formal Shirt (from ₹700)</option>
+          <option>Multiple Products</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Quantity</label>
+        <input type="number" placeholder="e.g. 10" min="1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Upload Your Design</label>
+      <div class="file-upload-area" id="uploadArea">
+        <input type="file" id="designFile" accept="image/*,.pdf,.ai,.psd,.svg" onchange="handleFileSelect(this)">
+        <span class="upload-icon">🎨</span>
+        <p class="upload-text">Drag &amp; drop or <strong>click to upload</strong></p>
+        <p class="upload-hint">JPG · PNG · PDF · SVG · AI · PSD</p>
+        <p class="file-name-display" id="fileNameDisplay"></p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Special Requirements</label>
+      <textarea placeholder="Colors, sizes, placement, custom text, quantity per size..."></textarea>
+    </div>
+    <button type="submit" class="submit-btn">Send Enquiry →</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="logo">TP <span style="color:var(--rust)">Associates</span></a>
+    <p class="footer-tagline">Custom apparel for individuals, teams &amp; businesses. Quality you can feel, at prices you'll love.</p>
+    <p class="footer-founders">Founded by Dhaval &amp; Gautam</p>
+  </div>
+  <div class="footer-col">
+    <h4>Products</h4>
+    <ul>
+      <li><a href="#products">T-Shirts</a></li>
+      <li><a href="#products">Hoodies</a></li>
+      <li><a href="#products">Formal Shirts</a></li>
+      <li><a href="#products">Bulk Orders</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <ul>
+      <li><a href="#founders">About Us</a></li>
+      <li><a href="#process">How It Works</a></li>
+      <li><a href="#order">Contact Us</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Contact</h4>
+    <ul>
+      <li><a href="mailto:tpassociates07@gmail.com">Email Us</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">WhatsApp</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2025 TP Associates. All rights reserved.</p>
+  <p>tpassociates07@gmail.com</p>
+</div>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx=0, my=0, rx=0, ry=0;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cursor.style.transform=`translate(${mx-6}px,${my-6}px)`;
+  });
+  (function animateRing() {
+    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+    ring.style.transform=`translate(${rx-18}px,${ry-18}px)`;
+    requestAnimationFrame(animateRing);
+  })();
+
+  const reveals = document.querySelectorAll('.reveal');
+  new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold:0.12}).observe && reveals.forEach(el => {
+    new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, {threshold:0.12}).observe(el);
+  });
+
+  function handleFileSelect(input) {
+    const d = document.getElementById('fileNameDisplay');
+    if(input.files && input.files[0]) {
+      d.textContent = '✓ ' + input.files[0].name;
+      d.style.display = 'block';
+    }
+  }
+
+  const area = document.getElementById('uploadArea');
+  area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+  area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+  area.addEventListener('drop', e => {
+    e.preventDefault(); area.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if(f) {
+      const d = document.getElementById('fileNameDisplay');
+      d.textContent = '✓ ' + f.name;
+      d.style.display = 'block';
+    }
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.submit-btn');
+    btn.textContent = '✓ Enquiry Sent!';
+    btn.style.background = '#2d7a2d';
+    setTimeout(() => {
+      btn.textContent = 'Send Enquiry →';
+      btn.style.background = '';
+      e.target.reset();
+      document.getElementById('fileNameDisplay').style.display='none';
+    }, 3000);
+  }
+</script>
+</body>
+</html>
